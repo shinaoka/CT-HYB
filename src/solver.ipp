@@ -52,6 +52,9 @@ int MatrixSolver<Scalar>::solve(const std::string& dump_file) {
         //Average sign
         results_["Sign"] = mc_results_["Sign"].template mean<double>();
 
+        //If excecuted in subprocess mode
+        results_["executed_in_subprocess_mode"] = Base::parameters_["as_subprocess"].template as<int>();
+
         //Single-particle Green's function
         compute_G1<SOLVER_TYPE>(mc_results_, Base::parameters_, sim.get_rotmat_Delta(), results_);
         if (Base::parameters_["measurement.equal_time_G1.on"] != 0) {

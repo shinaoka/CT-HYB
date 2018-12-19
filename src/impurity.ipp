@@ -18,6 +18,7 @@ void HybridizationSimulation<IMP_MODEL>::define_parameters(parameters_type &para
                            alps::fs::remove_extensions(origin_name(parameters)) + ".out.h5",
                            "name of the output file")
       .define<int>("verbose", 0, "Verbose output for a non-zero value")
+      .define<int>("as_subprocess", 0, "Set 1 when the solver is launched as subprocesses from a MPI application. In this case, MPI_Finalize will not be called.")
       .define<int>("sliding_window.max", 1000, "Max number of windows")
       .define<int>("sliding_window.min", 1, "Min number of windows")
           //Model definition

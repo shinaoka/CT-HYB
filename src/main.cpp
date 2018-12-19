@@ -14,6 +14,7 @@
 
 #include "hdf5/boost_any.hpp"
 #include "solver.hpp"
+#include "mpi.h"
 
 int main(int argc, const char *argv[]) {
   //Here we construct a parameter object by parsing an ini file.
@@ -22,7 +23,9 @@ int main(int argc, const char *argv[]) {
   par.define<std::string>("algorithm", "complex-matrix", "Name of algorithm (real-matrix, complex-matrix)");
 
   char **argv_tmp = const_cast<char **>(argv);//FIXME: ugly solution
-  alps::mpi::environment env(argc, argv_tmp);
+  MPI_Init(&argc, &argv_tmp);
+  //alps::mpi::environment env(argc, argv_tmp);
+
   alps::mpi::communicator c;
 
   alps::accumulators::result_set results;
@@ -58,6 +61,12 @@ int main(int argc, const char *argv[]) {
         ar["/" + it->first] << it->second;
       }
     }
+  }
+
+  if (par["as_subprocess"].as<int>() == 0) {
+    // We do not want to finalize the MPI environment when solver is called as a subprocess.
+    // MPI simulation will continue.
+    MPI_Finalize();
   }
 
   return 0;
